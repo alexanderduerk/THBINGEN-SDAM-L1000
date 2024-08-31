@@ -264,7 +264,7 @@ function translateToSQL(searchArg, table) {
                      si.nsamples,
                      si.cc_q75,
                      si.ss_ngene,
-                     si.tas 'Transcriptional,
+                     si.tas,
                      si.pct_self_rank_q25,
                      si.wt,
                      si.median_recall_rank_spearman,
