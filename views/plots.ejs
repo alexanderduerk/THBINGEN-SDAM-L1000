@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+  <!-- L1000 bar -->
+  <head>
+    <!-- L1000 title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L1000</title>
+    <!-- Chartjs library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+  <!-- link to stylesheet for div -->
+
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+       <!-- L1000 Style -->
+      </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <a href="/" class="logo">L1000</a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="menu-toggle">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+    <!-- First myChart1-->
+  <div class = "chart-container">
+    <canvas id="myChart1" class="Chart"></canvas>
+    <div class = "chart-buttons">
+    <button
+      class="chart-button"
+      onclick="downloadData(myChart1, xValues1, yValues1)"
+    >
+      <!-- Download function for csv file chart1-->
+      Download Data
+    </button>
+    <!-- Download function for Chartimage-->
+    <button id="download-image" onclick="DownloadChart(myChart1)">
+      Download Chart
+    </button>
+    </div>
+    <div class= "chart-text">
+      <p>This Chart provides information about the siginfo name and the correlating tas values (Contains all limit hits)</p>
+    </div>
+  </div>
+
+
+
+
+
+    <!-- Second myChart2 -->
+  <div class = "chart-container">
+    <canvas id="myChart2" class="Chart"></canvas>
+    <div class = "chart-buttons">
+    <button class="chart-button" onclick="downloadData(myChart2, xValues2, yValues2)"
+    >
+    Download Data
+      
+    <!-- Dowload chart as image mychart2-->
+    <button id="download-image" onclick="DownloadChart(myChart2)">
+        Download Chart
+    </button>
+    </div>
+    <div class= "chart-text">
+      <p>This Chart provides information about the siginfo name and the number of genes which are changed (Contains all limit hits)</p>
+    </div>
+  </div>
+
+
+
+  
+    <form>
+      <!-- Multiple Canvas / Charts which will be displayed -->
+      <input type="hidden" id="data1" value="<%= JSON.stringify(data) %>" />
+      <input type="hidden" id="data2" value="<%= JSON.stringify(data) %>" />
+      <input type="hidden" id="data3" value="<%= JSON.stringify(data) %>" />
+    </form>
+    <script>
+      // First chart data
+      const rawData1 = document.getElementById('data1').value;
+      const data1 = JSON.parse(rawData1);
+
+      const xValues1 = [];
+      const yValues1 = [];
+
+      // Sort data by tas values in ascending order for first
+      data1.sort((a, b) => a.tas - b.tas);
+
+      for (const row of data1) {
+        xValues1.push(row.sig_name); // Using sig_name for better label variety
+        yValues1.push(row.tas); // Keeping tas as y-axis values
+      }
+
+      let myChart1 = new Chart(
+        document.getElementById('myChart1').getContext('2d'),
+        {
+          type: 'bar',
+          data: {
+            labels: xValues1, // X-axis labels from sig_name array
+            datasets: [
+              {
+                label: 'TAS',
+                data: yValues1, // Y-axis data from tas array
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'category', // X-axis is categorical
+              },
+              y: {
+                beginAtZero: true, // Start y-axis at 0
+                // Get a download function for this plot from chartjs in browser
+                animation: {
+                  onComplete: function () {
+                    console.log(myChart.toBase64Image());
+                  },
+                },
+              },
+            },
+          },
+        }
+      );
+
+      // Second chart data
+      const rawData2 = document.getElementById('data2').value;
+      const data2 = JSON.parse(rawData2);
+
+      const xValues2 = [];
+      const yValues2 = [];
+
+      // Sort and populate data for the second chart
+      data2.sort((a, b) => a.ss_ngene - b.ss_ngene);
+      for (const row of data2) {
+        xValues2.push(row.sig_name);
+        yValues2.push(row.ss_ngene);
+      }
+
+      // Create the second chart
+      let myChart2 = new Chart(document.getElementById('myChart2').getContext('2d'), 
+      {
+        type: 'bar',
+        data: {
+          labels: xValues2,
+          datasets: [
+            {
+              label: 'ss_ngene',
+              data: yValues2,
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            x: { 
+              type: 'category' 
+            },
+            y: {
+               beginAtZero: true, 
+               animation: {
+                onComplete: function () {
+                  console.log(myChart.toBase64Image());
+                },
+               }, 
+              },
+          },
+        },
+      });
+
+      
+      const charts = document.querySelectorAll('canvas');
+
+      charts.forEach((chart) => {
+        // Set initial width and height (replace 50% with your desired size)
+        chart.style.width = '50%';
+        chart.style.height = '50%';
+
+        chart.addEventListener('mouseenter', () => {
+          chart.style.width = '100%'; // Increase width to 75% on hover
+          chart.style.height = '100%'; // Increase height to 75% on hover
+        });
+        chart.addEventListener('mouseleave', () => {
+          chart.style.width = '50%'; // Reset width to 100% on mouse leave
+          chart.style.height = '50%'; // Reset height to 100% on mouse leave
+        });
+      });
+
+      function DownloadChart(ChartId) {
+        // create a pseudo link
+        let a = document.createElement('a');
+        // set href of corresponding plot to href
+        a.href = ChartId.toBase64Image();
+        // define a download name
+        a.download = 'Chart.png';
+        // Trigger the download
+        a.click();
+      }
+
+      // NEW GET THE .CSV FILE 
+      function downloadData(chartId, xValues, yValues) {
+        // Prepare CSV content
+        let csvContent = "data:text/csv;charset=utf-8,";
+        // Add headers
+        csvContent += "Label,Value\n";
+        // Add data rows
+        for (let i = 0; i < xValues.length; i++) {
+          csvContent += `${xValues[i]},${yValues[i]}\n`;
+        }
+        // Create a pseudo link
+        let a = document.createElement('a');
+        // Encode CSV content and set as link href
+        a.href = encodeURI(csvContent);
+        // Define the download name based on chartId
+        a.download = `${chartId.id}_data.csv`;
+        // Trigger the download
+        a.click();
+      }
+    </script>
+  </body>
+</html>

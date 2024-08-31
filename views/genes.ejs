@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L1000</title>
+  <link rel="stylesheet" href="/css/tablestyles.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <script>
+  function adjustOffset(amount) {
+      // Get the hidden input field for searchArg
+      const searchArgField = document.getElementById('searchArg');
+      // Decode and parse the JSON string from the hidden field
+      let searchArg;
+      try {
+        searchArg = JSON.parse(searchArgField.value);
+        console.log(`searchArg: ${JSON.stringify(searchArg)}`);
+      } catch (e) {
+        console.error('Error parsing searchArg:', e);
+        return;
+      }
+      // Update offset and limit values
+      const currentOffset = parseInt(searchArg.offset, 10) || 0;
+      const limit = parseInt(searchArg.limit, 10) || 10;
+      // Adjust offset
+      searchArg.offset = currentOffset + (amount * limit);
+      searchArg.offset = Math.max(searchArg.offset, 0);
+      searchArg.limit = limit;
+      // Update the hidden input field with the new searchArg
+      searchArgField.value = JSON.stringify(searchArg);
+      // Submit the form
+      document.getElementById('searchForm').submit();
+    }
+    function changeLimit(newLimit) {
+      const searchArgField = document.getElementById('searchArg');
+      const searchArg = JSON.parse(searchArgField.value);
+      searchArg.limit = newLimit;
+      console.log(JSON.stringify(searchArg.limit));
+      searchArgField.value = JSON.stringify(searchArg);
+      document.getElementById('searchForm').submit();
+    }
+  </script>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">L1000</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <div class="menu-toggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <% if (data && data.length > 0) { %>
+      <table>
+        <thead>
+          <tr class="header-row">
+            <th>Gene Symbol</th>
+            <th>Ensemble ID</th>
+            <th>Gene Description</th>
+            <th>Type of gene</th>
+            <th>Source</th>
+            <th>Interferrence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const row of data) { %>
+            <tr>
+              <% for (const value of Object.values(row)) { %>
+                <td><%= value %></td>
+              <% } %>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No data available</p>
+    <% } %>
+    <!--overhanding searchArg-->
+    <div class="Pagination">
+    <button type="button" onclick="adjustOffset(-1, event)">Prev.</button>
+    <button type="button" onclick="adjustOffset(1, event)">Next.</button>
+    <button type="button" onclick="changeLimit(25)">25</button>
+    <button type="button" onclick="changeLimit(50)">50</button>
+    <button type="button" onclick="changeLimit(100)">100</button>
+    <form
+      id="searchForm"
+      action="/genes/searchUI"
+      method="post"
+    >
+      <input type="hidden" id="searchArg" name="searchArg" value="<%= JSON.stringify(currentSearchArg) %>">
+    </form>
+  </div>
+  </main>
+</body>
+</html>

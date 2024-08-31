@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>L1000</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script>
+      function updateFieldAndSubmit(column_name, searchargid, formid, valueid) {
+        // Get the value from the input field
+        const newValue = document.getElementById(valueid).value;
+        console.log(newValue);
+
+        // Create the searchArg object (assuming it was initially set)
+        let searchArg = {};
+        // Get the current JSON string from the hidden input field if it exists
+        const searchArgField = document.getElementById(searchargid);
+        console.log(searchArgField.value);
+        try {
+          searchArg = JSON.parse(searchArgField.value) || {};
+        } catch (e) {
+          console.error('Error parsing searchArg:', e);
+        }
+        // Update the specific field in the searchArg object
+        searchArg.val = newValue;
+        searchArg.field = column_name;
+        searchArg.op = 'contains';
+        searchArg.limit = '25';
+        searchArg.offset = '0';
+        searchArg.orderfield = column_name;
+        searchArg.order = 'ASC';
+        searchArg.descendants = [];
+
+        // Serialize the updated searchArg object and set it in the hidden input
+        searchArgField.value = JSON.stringify(searchArg);
+
+        // Submit the form
+        document.getElementById(formid).submit();
+      }
+
+      function setupEnterKeyHandler(inputId, column_name, searchargid, formid) {
+        document
+          .getElementById(inputId)
+          .addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+              event.preventDefault(); // Prevent the default form submission
+              updateFieldAndSubmit(column_name, searchargid, formid, inputId);
+            }
+          });
+      }
+
+      window.addEventListener('DOMContentLoaded', (event) => {
+        setupEnterKeyHandler(
+          'cellval',
+          'cell_name',
+          'searchArgCells',
+          'searchFormCells'
+        );
+        setupEnterKeyHandler(
+          'compoundval',
+          'at.pert_name',
+          'searchArgCompounds',
+          'searchFormCompounds'
+        );
+        setupEnterKeyHandler(
+          'geneval',
+          'at.gene_target',
+          'searchArgGenetargets',
+          'searchFormGenes'
+        );
+      });
+    </script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <a href="/" class="logo">L1000</a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="menu-toggle">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="grid-container">
+      <section class="about">
+        <h1>What is this project about?</h1>
+        <p>
+          This project aims to deliver a user-friendly way to access and save
+          data in a SQL database which stores the L1000 dataset. Also, we hope
+          to get some analysis running, delivering several different graphical
+          analysis tools for the user.
+        </p>
+      </section>
+
+      <div class="search-window">
+        <div class="widget">
+          <h2>Search by Cell</h2>
+          <form
+            id="searchFormCells"
+            action="/siginfo/searchUI"
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+          >
+            <input
+              type="text"
+              id="cellval"
+              value=""
+              placeholder="Search by cellname"
+            />
+            <input type="hidden" id="searchArgCells" name="searchArg" />
+            <button
+              type="button"
+              onclick="updateFieldAndSubmit('cell_name', 'searchArgCells', 'searchFormCells', 'cellval')"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+
+        <div class="widget">
+          <h2>Search by Compound</h2>
+          <form
+            id="searchFormCompounds"
+            action="/siginfo/searchUI"
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+          >
+            <input
+              type="text"
+              id="compoundval"
+              value=""
+              placeholder="Search by compound"
+            />
+            <input type="hidden" id="searchArgCompounds" name="searchArg" />
+            <button
+              type="button"
+              onclick="updateFieldAndSubmit('at.pert_name', 'searchArgCompounds', 'searchFormCompounds', 'compoundval')"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+
+        <div class="widget">
+          <h2>Search by Gene</h2>
+          <form
+            id="searchFormGenes"
+            action="/siginfo/searchUI"
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+          >
+            <input
+              type="text"
+              id="geneval"
+              value=""
+              placeholder="Search by genes"
+            />
+            <input type="hidden" id="searchArgGenetargets" name="searchArg" />
+            <button
+              type="button"
+              onclick="updateFieldAndSubmit('at.gene_target', 'searchArgGenetargets', 'searchFormGenes', 'geneval')"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <p>
+          <img
+            src="data:image/png;base64,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"
+            alt="About Image Alexander Dürk"
+            width="300px"
+          />
+        </p>
+      </div>
+    </div>
+    <footer>
+      <div class="container">
+        <p>&copy; 2024 L1000. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
