@@ -72,7 +72,7 @@ class Genes {
    */
   static async deleteOne(dbconnection, geneid) {
     const sql = 'DELETE FROM genes WHERE gene_id = ?';
-    const dbres = await dbconnection.run(sql, `${geneid}`);
+    const dbres = await dbconnection.run(sql, geneid);
     // return a console.log that the given cell was deleted
     console.log(`Cell with cell_id: ${geneid} was deleted`);
   }
