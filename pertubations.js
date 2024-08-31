@@ -108,7 +108,7 @@ class Perturbagens {
       `SQL generated to search Compounds:\n${JSON.stringify(searchSql)}`
     );
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
@@ -126,7 +126,7 @@ class Perturbagens {
       `SQL generated to search Compounds:\n${JSON.stringify(searchSql)}`
     );
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
@@ -141,7 +141,7 @@ class Perturbagens {
       `SQL generated to search Compounds:\n${JSON.stringify(searchSql)}`
     );
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
