@@ -1,4 +1,3 @@
--- Active: 1723282407090@@127.0.0.1@3306
 -- Create a Cells table
 
 CREATE TABLE IF NOT EXISTS signature_infos (
@@ -148,10 +147,10 @@ CREATE TABLE IF NOT EXISTS tempperturbagens (
 ) 
 
 .mode csv
-.import C:/Users/duerk/downloads/siginfo.csv tempsignature_infos
-.import C:/Users/duerk/OneDrive/Dokumente/GitHub/L1000/cellinfo.csv tempcells
-.import C:/Users/duerk/OneDrive/Dokumente/GitHub/L1000/genes.csv tempgenes
-.import C:/Users/duerk/OneDrive/Dokumente/GitHub/L1000/compounds.csv tempperturbagens
+.import Users/path/to/siginfo.csv tempsignature_infos
+.import Users/path/to/cellinfo.csv tempcells
+.import Users/path/to/genes.csv tempgenes
+.import Users/path/to/compounds.csv tempperturbagens
 
 INSERT INTO signature_infos ('sig_name', 'pert_name', 'cmap_name', 'pert_type', 'cell_name', 'bead_batch', 'pert_dose', 'pert_time', 'nsamples', 'cc_q75', 'ss_ngene', 'tas', 'pct_self_rank_q25', 'wt', 'median_recall_rank_spearman', 'median_recall_rank_wtcs_50', 'median_recall_score_spearman', 'median_recall_score_wtcs_50', 'batch_effect_tstat', 'batch_effect_tstat_pct', 'is_hiq', 'qc_pass', 'det_wells', 'det_plates', 'distil_ids','project_code') SELECT * FROM tempsignature_infos
 
