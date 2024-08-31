@@ -77,7 +77,7 @@ class Cells {
   // sql statement
   static async deleteOne(dbconnection, cellid) {
     const sql = 'DELETE FROM cells WHERE cell_id = ?';
-    const dbres = await dbconnection.run(sql, `${cellid}`);
+    const dbres = await dbconnection.run(sql, cellid);
     // return a console.log that the given cell was deleted
     console.log(`Cell with cell_id: ${cellid} was deleted`);
   }
