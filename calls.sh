@@ -440,7 +440,7 @@ echo "Successfully updated Signature entry: $updated_entry"
           {
             "op": "contains",
             "val": "CMAP123",
-            "field": "cmap_name"}]
+            "field": "si.cmap_name"}]
   }}')
  
 echo "Sucessfully searched with descendants: $updated_sigcomplex"
