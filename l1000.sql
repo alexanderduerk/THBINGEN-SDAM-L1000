@@ -1,5 +1,3 @@
--- Create a Cells table
-
 CREATE TABLE IF NOT EXISTS signature_infos (
     sig_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sig_name VARCHAR(50) UNIQUE NOT NULL ON CONFLICT IGNORE,
@@ -30,8 +28,8 @@ CREATE TABLE IF NOT EXISTS signature_infos (
     project_code VARCHAR(20),
     FOREIGN KEY(pert_name) REFERENCES perturbagens(pert_name),
     FOREIGN KEY(cell_name) REFERENCES cells(cell_name)
-)
-
+);
+ 
 CREATE TABLE IF NOT EXISTS cells (
     cell_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- THE PRIMARY KEY SHOULD AUTOINCREMENT A INTEGER FOR EVERY ENTRY
     cell_name VARCHAR(30) NOT NULL,  -- THE CURATED NAME FOR THE CELLLINE IT SHOULDNT BE LONGER THEN 30 CHARACTERS AND SHOULDNT BE 0 WE WILL NOT ADD A UNIQUE CONSTRAIN BECAUSE DIFERENT ADAPTIONS TO GROWTH MEDIA COULD BE POSSIBLE
@@ -49,8 +47,8 @@ CREATE TABLE IF NOT EXISTS cells (
     provider_name VARCHAR(30), -- A PROVIDER SHOULD BE SAVED EVERY TIME TO ALLOW PROPER RESULT REPRODUCTION BASED ON DATA
     growth_pattern VARCHAR(20) NOT NULL, -- THIS COULD MAYBE TO CHANGED TO SOME INTEGER APPROACH, IT IS IMPORTANT TO SAVE THE GRWOTH PATTERN BECAUSE THE SAME CELL LINE COULD BE ADAPTED TO DIFFERENT GROWTH CONDITIONS
     UNIQUE(cell_name, cell_type, growth_pattern) ON CONFLICT IGNORE -- SIMPLE CONSTRAIN TO CHECK IF THE COMBINATION OF THE NOT NULL COLUMNS ALREADY EXISTS IN OUR DATABASE AND IF SO IGNORES THE INCOMING INPUT REQUEST
-)
-
+);
+ 
 CREATE TABLE IF NOT EXISTS genes (
     gene_id INTEGER PRIMARY KEY AUTOINCREMENT,
     entrez_id INTEGER UNIQUE NOT NULL ON CONFLICT IGNORE,
@@ -60,8 +58,8 @@ CREATE TABLE IF NOT EXISTS genes (
     gene_type VARCHAR(30),
     src VARCHAR(20),
     feature_space VARCHAR(30)
-)
-
+);
+ 
 CREATE TABLE perturbagens (
     pert_id INTEGER PRIMARY KEY AUTOINCREMENT,                      -- A unique identifier/counter for a perturbagen
     pert_name VARCHAR(30) NOT NULL, -- A Code for a pertubagen
@@ -74,8 +72,8 @@ CREATE TABLE perturbagens (
     UNIQUE(pert_name, gene_target, moa) ON CONFLICT IGNORE,
     FOREIGN KEY (gene_target)
         REFERENCES genes (gene_symbol)
-)
-
+);
+ 
 CREATE TABLE IF NOT EXISTS tempsignature_infos (
     sig_name VARCHAR(50) UNIQUE NOT NULL,
     pert_name VARCHAR(30) NOT NULL,
@@ -103,8 +101,8 @@ CREATE TABLE IF NOT EXISTS tempsignature_infos (
     det_plates VARCHAR(50),
     distil_ids VARCHAR(50),
     project_code VARCHAR(20)
-)
-
+);
+ 
 CREATE TABLE IF NOT EXISTS tempcells (
     cell_name VARCHAR(30) NOT NULL,  -- THE CURATED NAME FOR THE CELLLINE IT SHOULDNT BE LONGER THEN 30 CHARACTERS AND SHOULDNT BE 0 WE WILL NOT ADD A UNIQUE CONSTRAIN BECAUSE DIFERENT ADAPTIONS TO GROWTH MEDIA COULD BE POSSIBLE
     cellosaurus_id VARCHAR(20), -- THIS WOULD ALLOW TO SEARCH THE CELL WITHIN THE CELLOSAURUS ENCYCLOPEDIA
@@ -121,8 +119,8 @@ CREATE TABLE IF NOT EXISTS tempcells (
     provider_name VARCHAR(30), -- A PROVIDER SHOULD BE SAVED EVERY TIME TO ALLOW PROPER RESULT REPRODUCTION BASED ON DATA
     growth_pattern VARCHAR(20) NOT NULL, -- THIS COULD MAYBE TO CHANGED TO SOME INTEGER APPROACH, IT IS IMPORTANT TO SAVE THE GRWOTH PATTERN BECAUSE THE SAME CELL LINE COULD BE ADAPTED TO DIFFERENT GROWTH CONDITIONS
     UNIQUE(cell_name, cell_type, growth_pattern) ON CONFLICT IGNORE -- SIMPLE CONSTRAIN TO CHECK IF THE COMBINATION OF THE NOT NULL COLUMNS ALREADY EXISTS IN OUR DATABASE AND IF SO IGNORES THE INCOMING INPUT REQUEST
-)
-
+);
+ 
 CREATE TABLE IF NOT EXISTS tempgenes (
     entrez_id INTEGER UNIQUE NOT NULL ON CONFLICT IGNORE,
     gene_symbol VARCHAR(30) NOT NULL ON CONFLICT IGNORE,
@@ -131,8 +129,8 @@ CREATE TABLE IF NOT EXISTS tempgenes (
     gene_type VARCHAR(30),
     src VARCHAR(20),
     feature_space VARCHAR(30)
-)
-
+);
+ 
 CREATE TABLE IF NOT EXISTS tempperturbagens (
     pert_name VARCHAR(30) NOT NULL, -- A Code for a pertubagen
     cmap_name VARCHAR(30),                            -- The internal (CMap-designated) name of a perturbagen
@@ -144,22 +142,22 @@ CREATE TABLE IF NOT EXISTS tempperturbagens (
     UNIQUE(pert_name, gene_target, moa) ON CONFLICT IGNORE
     --FOREIGN KEY (gene_target)
     --    REFERENCES genes (gene_symbol)
-) 
-
+);
+ 
 .mode csv
-.import Users/path/to/siginfo.csv tempsignature_infos
-.import Users/path/to/cellinfo.csv tempcells
-.import Users/path/to/genes.csv tempgenes
-.import Users/path/to/compounds.csv tempperturbagens
-
-INSERT INTO signature_infos ('sig_name', 'pert_name', 'cmap_name', 'pert_type', 'cell_name', 'bead_batch', 'pert_dose', 'pert_time', 'nsamples', 'cc_q75', 'ss_ngene', 'tas', 'pct_self_rank_q25', 'wt', 'median_recall_rank_spearman', 'median_recall_rank_wtcs_50', 'median_recall_score_spearman', 'median_recall_score_wtcs_50', 'batch_effect_tstat', 'batch_effect_tstat_pct', 'is_hiq', 'qc_pass', 'det_wells', 'det_plates', 'distil_ids','project_code') SELECT * FROM tempsignature_infos
-
-INSERT INTO cells('cell_name', 'cellosaurus_id', 'donor_age', 'doubling_time', 'growth_medium', 'cell_type', 'donor_ethnicity', 'donor_sex', 'donor_tumor_phase', 'cell_lineage', 'primary_disease', 'subtype_disease', 'provider_name', 'growth_pattern') SELECT * FROM tempcells
-
-INSERT INTO genes ('entrez_id', 'gene_symbol', 'ensembl_id', 'gene_title', 'gene_type', 'src', 'feature_space') SELECT * FROM tempgenes
-
-INSERT INTO perturbagens ('pert_name', 'cmap_name', 'gene_target', 'moa', 'canonical_smiles', 'inchi_key', 'compound_aliases') SELECT * FROM tempperturbagens
-
+.import /Users/daron/Desktop/Studium/siginfo.csv tempsignature_infos;
+.import /Users/daron/Documents/GitHub/SDAM-L1000/cellinfo.csv tempcells;
+.import /Users/daron/Documents/GitHub/SDAM-L1000/genes.csv tempgenes;
+.import /Users/daron/Documents/GitHub/SDAM-L1000/compounds.csv tempperturbagens;
+ 
+INSERT INTO signature_infos ('sig_name', 'pert_name', 'cmap_name', 'pert_type', 'cell_name', 'bead_batch', 'pert_dose', 'pert_time', 'nsamples', 'cc_q75', 'ss_ngene', 'tas', 'pct_self_rank_q25', 'wt', 'median_recall_rank_spearman', 'median_recall_rank_wtcs_50', 'median_recall_score_spearman', 'median_recall_score_wtcs_50', 'batch_effect_tstat', 'batch_effect_tstat_pct', 'is_hiq', 'qc_pass', 'det_wells', 'det_plates', 'distil_ids','project_code') SELECT * FROM tempsignature_infos;
+ 
+INSERT INTO cells('cell_name', 'cellosaurus_id', 'donor_age', 'doubling_time', 'growth_medium', 'cell_type', 'donor_ethnicity', 'donor_sex', 'donor_tumor_phase', 'cell_lineage', 'primary_disease', 'subtype_disease', 'provider_name', 'growth_pattern') SELECT * FROM tempcells;
+ 
+INSERT INTO genes ('entrez_id', 'gene_symbol', 'ensembl_id', 'gene_title', 'gene_type', 'src', 'feature_space') SELECT * FROM tempgenes;
+ 
+INSERT INTO perturbagens ('pert_name', 'cmap_name', 'gene_target', 'moa', 'canonical_smiles', 'inchi_key', 'compound_aliases') SELECT * FROM tempperturbagens;
+ 
 DROP TABLE tempsignature_infos;
 DROP TABLE tempcells;
 DROP TABLE tempgenes;
