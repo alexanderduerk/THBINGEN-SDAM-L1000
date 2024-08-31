@@ -118,7 +118,7 @@ class Cells {
         : 'SELECT * FROM cells';
     console.log(`SQL generated to search Cells:\n${JSON.stringify(searchSql)}`);
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
@@ -155,7 +155,7 @@ class Cells {
         : 'SELECT * FROM cells';
     console.log(`SQL generated to search Cells:\n${JSON.stringify(searchSql)}`);
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
