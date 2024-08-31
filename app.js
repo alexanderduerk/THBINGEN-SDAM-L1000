@@ -411,7 +411,7 @@ app.post('/genes/searchUI', async (req, res) => {
       driver: sqlite3.Database,
     });
     // Query the db
-    const genes = await Genes.searchUI(searchArg, db);
+    const genes = await Genes.searchUI(searchArg, searchArg.offset, searchArg.limit, db);
     // Return the result:
     if (req.accepts('html')) {
       res.render(
