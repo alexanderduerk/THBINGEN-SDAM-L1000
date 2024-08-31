@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L1000</title>
+  <link rel="stylesheet" href="/css/tablefull.css" />
+  <link rel="stylesheet" href="/css/styleFull.css" />
+  <script>
+    function adjustOffset(amount) {
+      // Get the hidden input field for searchArg
+      const searchArgField = document.getElementById('searchArg');
+      // Decode and parse the JSON string from the hidden field
+      let searchArg;
+      try {
+        searchArg = JSON.parse(searchArgField.value);
+        console.log(`searchArg: ${JSON.stringify(searchArg)}`);
+      } catch (e) {
+        console.error('Error parsing searchArg:', e);
+        return;
+      }
+      // Update offset and limit values
+      const currentOffset = parseInt(searchArg.offset, 10) || 0;
+      const limit = parseInt(searchArg.limit, 10) || 10;
+      // Adjust offset
+      searchArg.offset = currentOffset + (amount * limit);
+      searchArg.offset = Math.max(searchArg.offset, 0);
+      searchArg.limit = limit;
+      // Update the hidden input field with the new searchArg
+      searchArgField.value = JSON.stringify(searchArg);
+      // Submit the form
+      document.getElementById('searchForm').submit();
+    }
+    function changeLimit(newLimit) {
+      const searchArgField = document.getElementById('searchArg');
+      const searchArg = JSON.parse(searchArgField.value);
+      searchArg.limit = newLimit;
+      console.log(JSON.stringify(searchArg.limit));
+      searchArgField.value = JSON.stringify(searchArg);
+      document.getElementById('searchForm').submit();
+    }
+
+    function changeOrder(order, column, formid) {
+      const searchArgField = document.getElementById('searchArg');
+      const searchArg = JSON.parse(searchArgField.value);
+      searchArg.order = order;
+      searchArg.orderfield = column;
+      searchArgField.value = JSON.stringify(searchArg);
+      document.getElementById('searchForm').submit();
+    }
+
+function addDescendant(operator, valueInputId, field, formId) {
+  const value = document.getElementById(valueInputId).value;
+
+  const searchArgField = document.getElementById('searchArg');
+  let searchArg = JSON.parse(searchArgField.value);
+
+  searchArg.descendants = searchArg.descendants || [];
+
+  const originalSearch = {
+    op: searchArg.op,
+    val: searchArg.val,
+    field: searchArg.field
+  };
+
+  searchArg.op = '';
+  searchArg.val = '';
+  searchArg.field = '';
+
+  const newDescendant = {
+    op: operator,
+    val: value,
+    field
+  };
+
+  searchArg.descendants.push(originalSearch, newDescendant);
+  searchArg.op = 'AND';
+
+  searchArgField.value = JSON.stringify(searchArg);
+
+  document.getElementById('searchForm').submit();
+}
+
+function forwardLink(value, column_name, searchForm, searchArgID) {
+  const searchArgField = document.getElementById(searchArgID);
+  let searchArg = JSON.parse(searchArgField.value);
+  searchArg.val = value;
+  searchArg.field = column_name;
+  searchArg.op = 'contains';
+  searchArg.limit = '25';
+  searchArg.offset = '0';
+  searchArg.orderfield = column_name;
+  searchArg.order = 'ASC';
+  searchArg.descendants = [];
+  console.log(JSON.stringify(searchArg));
+  searchArgField.value = JSON.stringify(searchArg);
+  document.getElementById(searchForm).submit();
+}
+function fullsearch() {
+  const searchArgField = document.getElementById('searchArg');
+  let searchArg = JSON.parse(searchArgField.value);
+  document.getElementById('searchForm').submit();
+}
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">L1000</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <div class="menu-toggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </div>
+  </nav>
+ <main>
+  <% if (data && data.length > 0) { %>
+    <table>
+      <thead>
+        <tr class="header-row">
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Signature Name</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'sig_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'sig_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Targeted Gene</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'gene_target')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'gene_target')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Compound</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'pert_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'pert_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Connectivity Map Code</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'cmap_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'cmap_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Cells</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'cell_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'cell_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Bead batch</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'bead_batch')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'bead_batch')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Pertubation Dose</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'pert_dose')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'pert_dose')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Pertubation Time</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'pert_time')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'pert_time')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Number of samples</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'nsamples')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'nsamples')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">cc_q75</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'cc_q75')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'cc_q75')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Modulated Genes</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'ss_ngene')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'ss_ngene')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Transcriptional Activity</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'tas')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'tas')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">pct_self_rank_q25</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'pct_self_rank_q25')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'pct_self_rank_q25')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Wheight list</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'wt')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'wt')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">median_recall_rank_spearman</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'median_recall_rank_spearman')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'median_recall_rank_spearman')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">median_recall_rank_wtcs_50</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'median_recall_rank_wtcs_50')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'median_recall_rank_wtcs_50')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">median_recall_score_spearman</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'median_recall_score_spearman')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'median_recall_score_spearman')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">median_recall_score_wtcs_50</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'median_recall_score_wtcs_50')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'median_recall_score_wtcs_50')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">batch_effect_tstat</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'batch_effect_tstat')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'batch_effect_tstat')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">batch_effect_tstat_pct</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'batch_effect_tstat_pct')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'batch_effect_tstat_pct')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">High Quality Data</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'is_hiq')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'is_hiq')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Quality Control passed</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'qc_pass')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'qc_pass')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">det_wells</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'det_wells')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'det_wells')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">det_plates</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'det_plates')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'det_plates')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">distil_ids</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'distil_ids')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'distil_ids')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">project_code</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'project_code')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'project_code')">➧</button>
+                </div>
+            </div>
+          </th>
+        </tr>
+        <tr class="tooltip-row">
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">This is the name of the signature.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">The gene that the compound targets.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">This is the name of the compound used to perturbate.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The internal (CMap-designated) name of a perturbagen. By convention, for genetic perturbations CMap uses the HUGO gene symbol.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The cell type used in the experiment.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">One instantiation of a complete set of beads, which have been coupled to probes at one time, under the same conditions.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The dose of the compound applied.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The duration for which the cells were exposed to the compound.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Number of individual replicate profiles (level 4 / z-score) that were used to create the signature (level 5 / aggregate z-score).</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">75th quantile of pairwise spearman correlations in landmark space of replicate level 4 profiles.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">
+             Number of Genes that were differentially expressed in response to the compound.
+            </span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Score representing the transcriptional activity.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Self connectivity of replicates expressed as a percentage of total instances in a replicate set.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Comma-delimited list of the replicate weightings used to collapse into the level 5 signature. These will sum to 1.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The median pairwise recall rank by spearman correlation between replicate level 4 profiles.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The median pairwise recall rank by weighted connectivity score between replicate level 4 profiles.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The median pairwise spearman correlation between replicate level 4 profiles.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The median pairwise weighted connectiity score between replicate level 4 profiles.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The result of a one-sample t-test comparing the median correlation between signatures from the same plate to 0. Higher values indicate higher correlations between such signatures, and hence potentially a batch effect.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">The percentile of batch_effect_tstat relative to all other signatures.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Binary indicating whether the given signature was of high techincal and functional quality. Specific requirements are qc pass = 1 AND (median_recall_rank_spearman <= 5 OR median_recall_rank_wtcs_50 <= 5)</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext"> Binary indicating whether the given signature had at least 50% of its replicates flagged as qc_pass.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Pipe-delimited list of detection wells, which refers to each well of the detection plate in which an L1000 experiment is conducted.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Pipe-delimited list of detection plates, the plate of L1000 experiments that, at the end of the assay pipeline, is put through the Luminex scanners to detect the levels of landmark gene amplicons.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">Pipe-delmited list of IDs of individual replicate profiles, referred to as level 4 / z-score data, that is used in creating the signature from replicates assayed together on an L1000 plate. The signature is referred to as level 5 / aggregated z-score data.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext">An internal code identifying the project to which a signature belongs.</span></span>
+          </th>
+        </tr>
+      </thead>
+  <tbody>
+    <% for (const row of data) { %>
+      <tr>
+        <% for (const [key, value] of Object.entries(row)) { %>
+          <td>
+            <% if (key === 'cell_name') { %>
+              <a href="#" onclick="forwardLink('<%= value %>', 'cell_name', 'searchFormCells', 'searchArgCells')"><%= value %></a>
+            <% } else if (key === 'pert_name') { %>
+              <a href="#" onclick="forwardLink('<%= value %>', 'pert_name', 'searchFormPerts', 'searchArgPerts')"><%= value %></a>
+            <% } else if (key === 'gene_target') { %>
+              <a href="#" onclick="forwardLink('<%= value %>', 'gene_symbol', 'searchFormGenes', 'searchArgGenes')"><%= value %></a>
+            <% } else { %>
+              <%= value %>
+            <% } %>
+          </td>
+        <% } %>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+<% } else { %>
+  <p>No data available</p>
+<% } %>
+  <div class="Pagination">
+    <button type="button" onclick="adjustOffset(-1, event)">Prev.</button>
+    <button type="button" onclick="adjustOffset(1, event)">Next.</button>
+    <button type="button" onclick="changeLimit(25)">25</button>
+    <button type="button" onclick="changeLimit(50)">50</button>
+    <button type="button" onclick="changeLimit(100)">100</button>
+    <form
+      id="searchForm"
+      action="/siginfo/search"
+      method="post"
+    >
+      <input type="hidden" id="searchArg" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form id="searchFormCells" action="/cells/searchUI" method="post">
+      <input type="hidden" id="searchArgCells" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form id="searchFormPerts" action="/perturbations/searchUI" method="post">
+      <input type="hidden" id="searchArgPerts" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form id="searchFormGenes" action="/genes/searchUI" method="post">
+      <input type="hidden" id="searchArgGenes" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+  </div>
+  </main>
+</body>
+</html>
