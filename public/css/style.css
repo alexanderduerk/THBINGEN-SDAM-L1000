@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto';
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+main {
+  position: relative; /* Establishes a containing block for sticky positioning */
+  padding-top: 5px; /* Adjust if needed to accommodate sticky header height */
+}
+
+.navbar {
+  height: 100px;
+  background-color: #333;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for elevation */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  position: relative;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+  max-width: 100vw;
+}
+
+.container p {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 12px 12px;
+}
+
+.test-section p {
+  margin: 12px 12px;
+  padding: 5px 5px;
+  position: absolute;
+  right: 2px;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.logo {
+  color: #fff;
+  text-decoration: none;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+button {
+  background-color: #333; /* Medium gray background */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 0px; /* Rounded corners */
+  padding: 10px 20px; /* Padding around text */
+  margin: 10px;
+  font-size: 16px;
+  font-weight: 600; /* Semi-bold text */
+  text-transform: uppercase; /* Uppercase text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease; /* Smooth transitions */
+}
+
+button:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+button:active {
+  background-color: #4e555b; /* Even darker gray when clicked */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  transition:
+    color 0.3s,
+    background-color 0.3s;
+  font-size: 38px;
+}
+
+.nav-links a:hover {
+  color: #333;
+  background-color: #fff;
+  border-radius: 5px;
+  text-decoration: underline;
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.bar {
+  background-color: #fff;
+  height: 40px;
+  width: 25px;
+  margin: 3px 0;
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: #333;
+    position: absolute;
+    top: 60px;
+    left: 0;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+/* CSS Grid for the layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* Three columns */
+  gap: 20px; /* Space between columns */
+  padding: 20px; /* Padding around the grid */
+}
+
+.contact-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px;
+  padding: 20px;
+}
+
+.about {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.about-ABPage {
+  position: absolute;
+  top: 200px;
+  display: flex;
+  width: 60%;
+}
+
+.about h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 700;
+}
+
+.about p {
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.8;
+}
+
+/* .about p::first-letter {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  float: left;
+  margin-right: 10px;
+  line-height: 1.1;
+} */
+
+.search-window {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-window .widget {
+  margin-bottom: 20px;
+}
+
+.search-window h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.search-window form {
+  margin-bottom: 20px;
+}
+
+.search-window input[type='text'] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.search-window button {
+  padding: 10;
+}
