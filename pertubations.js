@@ -69,7 +69,7 @@ class Perturbagens {
   // sql statement
   static async deleteOne(dbconnection, pertid) {
     const sql = `DELETE FROM perturbagens WHERE pert_id = ?`;
-    const dbres = await dbconnection.run(sql, `${pertid}`);
+    const dbres = await dbconnection.run(sql, pertid);
     // return a console.log that the given pertubagens was deleted
     console.log(`Perturbagens with pert_id: ${pertid} was deleted`);
   }
