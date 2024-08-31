@@ -1,0 +1,33 @@
+/* styles.css */
+
+/* Container to hold both canvas and buttons */
+.chart-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Style for the buttons */
+.chart-buttons {
+  display: flex;
+  flex-direction: column; /* Stack the buttons vertically */
+  margin-left: 20px; /* Add some space between the canvas and the buttons */
+}
+
+.chart-text {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* L100 Styles */
+.l1000 {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto';
+  width: 100vw;
+  overflow-x: hidden;
+  position: relative; /* Establishes a containing block for sticky positioning */
+  padding-top: 5px; /* Adjust if needed to accommodate sticky header height */
+}
