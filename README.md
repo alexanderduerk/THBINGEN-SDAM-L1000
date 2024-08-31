@@ -63,7 +63,11 @@ Before you begin, ensure you have the following installed on your machine:
 
 ### Database Setup
 
-The API interacts with an SQLite database named l1000.db. Ensure this database is correctly set up and contains the necessary tables. For this you need to adjust the delivered [SQL-File](l1000.sql) by adding the full csv file paths for each table and run it afterwards. Afterwards the sql can be ran with the following code:
+The API interfaces with an SQLite database named l1000.db. To ensure the database is properly configured and populated with the required tables, follow these steps:
+
+1. Prepare the [SQL Script](l1000.sql): Modify the provided [SQL script](l1000.sql) file to include the complete file paths for each CSV data source. This step is necessary to correctly reference the data files that will be imported into the database tables.
+
+2. Execute the [SQL Script](l1000.sql): After adjusting the [SQL script](l1000.sql), execute it to set up and populate the database. Use the following command to run the SQL script against the SQLite database:
 
 ```sql
 l1000.db < l1000.sql
