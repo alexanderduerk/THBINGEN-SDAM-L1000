@@ -66,7 +66,7 @@ Before you begin, ensure you have the following installed on your machine:
 The API interacts with an SQLite database named l1000.db. Ensure this database is correctly set up and contains the necessary tables. For this you need to adjust the delivered [SQL-File](l1000.sql) by adding the full csv file paths for each table and run it afterwards. Afterwards the sql can be ran with the following code:
 
 ```sql
-l1000.db > l1000.sql
+l1000.db < l1000.sql
 ```
 
 ### Running the API
