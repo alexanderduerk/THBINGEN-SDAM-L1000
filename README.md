@@ -83,6 +83,10 @@ node app.js
 
 The server will start on http://localhost:3000.
 
+### Testing the API Endpoints
+
+We provide a complete [calls.sh](calls.sh) bash file which can be used to test each function seperatly. We recommend to copy to full code block for one data model and run it until deleting the Test entry
+
 ## API Endpoints
 
 ### Overview
