@@ -166,7 +166,7 @@ class Signatureinfo {
         ? searchArg.translateToSQL(searcharg, 'signature_infos')
         : 'SELECT * FROM signature_infos';
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     return dbResult;
   }
 
@@ -185,7 +185,7 @@ class Signatureinfo {
         ? searchArg.translateToSQL(searcharg, 'genetargets')
         : 'SELECT * FROM signature_infos';
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     return dbResult;
   }
 
@@ -204,7 +204,7 @@ class Signatureinfo {
         ? searchArg.translateToSQL(searcharg, 'signature_infosUI')
         : 'SELECT * FROM signature_infos';
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     return dbResult;
   }
   // Read by ID
