@@ -70,7 +70,7 @@ The API interfaces with an SQLite database named l1000.db. To ensure the databas
 2. Execute the [SQL Script](l1000.sql): After adjusting the [SQL script](l1000.sql), execute it to set up and populate the database. Use the following command to run the SQL script against the SQLite database:
 
 ```sql
-l1000.db < l1000.sql
+sqlite3 l1000.db < l1000.sql
 ```
 
 ### Running the API
