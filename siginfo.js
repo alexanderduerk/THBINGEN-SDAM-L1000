@@ -128,7 +128,7 @@ class Signatureinfo {
    */
   static async deleteOne(dbconnection, sigid) {
     const sql = `DELETE FROM signature_infos WHERE sig_id = ?`;
-    const dbres = await dbconnection.run(sql, `${sigid}`);
+    const dbres = await dbconnection.run(sql, sigid);
   }
 
   /**
