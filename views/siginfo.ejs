@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L1000</title>
+  <link rel="stylesheet" href="/css/tablestyles.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script>
+    function adjustOffset(amount) {
+      // Get the hidden input field for searchArg
+      const searchArgField = document.getElementById('searchArg');
+      // Decode and parse the JSON string from the hidden field
+      let searchArg;
+      try {
+        searchArg = JSON.parse(searchArgField.value);
+        console.log(`searchArg: ${JSON.stringify(searchArg)}`);
+      } catch (e) {
+        console.error('Error parsing searchArg:', e);
+        return;
+      }
+      // Update offset and limit values
+      const currentOffset = parseInt(searchArg.offset, 10) || 0;
+      const limit = parseInt(searchArg.limit, 10) || 10;
+      // Adjust offset
+      searchArg.offset = currentOffset + (amount * limit);
+      searchArg.offset = Math.max(searchArg.offset, 0);
+      searchArg.limit = limit;
+      // Update the hidden input field with the new searchArg
+      searchArgField.value = JSON.stringify(searchArg);
+      // Submit the form
+      document.getElementById('searchForm').submit();
+    }
+    function changeLimit(newLimit) {
+      const searchArgField = document.getElementById('searchArg');
+      const searchArg = JSON.parse(searchArgField.value);
+      searchArg.limit = newLimit;
+      console.log(JSON.stringify(searchArg.limit));
+      searchArgField.value = JSON.stringify(searchArg);
+      document.getElementById('searchForm').submit();
+    }
+
+    function changeOrder(order, column) {
+      const searchArgField = document.getElementById('searchArg');
+      const searchArg = JSON.parse(searchArgField.value);
+      searchArg.order = order;
+      searchArg.orderfield = column;
+      searchArgField.value = JSON.stringify(searchArg);
+      document.getElementById('searchForm').submit();
+    }
+
+function addDescendant(operator, valueInputId, field, formId) {
+  const value = document.getElementById(valueInputId).value;
+
+  const searchArgField = document.getElementById('searchArg');
+  let searchArg = JSON.parse(searchArgField.value);
+
+  searchArg.descendants = searchArg.descendants || [];
+
+  const originalSearch = {
+    op: searchArg.op,
+    val: searchArg.val,
+    field: searchArg.field
+  };
+
+  searchArg.op = '';
+  searchArg.val = '';
+  searchArg.field = '';
+
+  const newDescendant = {
+    op: operator,
+    val: value,
+    field
+  };
+
+  searchArg.descendants.push(originalSearch, newDescendant);
+  searchArg.op = 'AND';
+
+  searchArgField.value = JSON.stringify(searchArg);
+
+  document.getElementById('searchForm').submit();
+}
+
+function addNumberDescendant(valueInputId, field, formId) {
+  const inputValue = document.getElementById(valueInputId).value.trim();
+
+  // Regular expression to extract operator and value
+  const operatorValueRegex = /^(<=|>=|<|>)?\s*(.+)$/;
+  const match = inputValue.match(operatorValueRegex);
+
+  // Extract operator and value from the input
+  let operator = '';
+  let value = '';
+
+  if (match) {
+    operator = match[1] || ''; // Capture the operator if present, default to empty string if not
+    value = match[2]; // Capture the value
+  }
+
+  console.log(operator);
+  console.log(value);
+
+  // Fetch the searchArg field and parse its value as JSON
+  const searchArgField = document.getElementById('searchArg');
+  let searchArg = JSON.parse(searchArgField.value);
+
+  // Ensure descendants array exists
+  searchArg.descendants = searchArg.descendants || [];
+
+  // Store the original search parameters
+  const originalSearch = {
+    op: searchArg.op,
+    val: searchArg.val,
+    field: searchArg.field
+  };
+
+  // Reset the main search parameters to empty
+  searchArg.op = '';
+  searchArg.val = '';
+  searchArg.field = '';
+
+  // Create a new descendant with the parsed operator, value, and field
+  const newDescendant = {
+    op: operator,
+    val: value,
+    field: field
+  };
+
+  // Push both the original search and the new descendant into descendants
+  searchArg.descendants.push(originalSearch, newDescendant);
+
+  // Set the main operator to AND, implying both conditions should be met
+  searchArg.op = 'AND';
+
+  // Update the hidden searchArg field with the new search argument structure
+  searchArgField.value = JSON.stringify(searchArg);
+
+  // Submit the form
+  document.getElementById(formId).submit();
+}
+
+function forwardLink(value, column_name, searchForm, searchArgID) {
+  const searchArgField = document.getElementById(searchArgID);
+  let searchArg = JSON.parse(searchArgField.value);
+  searchArg.val = value;
+  searchArg.field = column_name;
+  searchArg.op = 'contains';
+  searchArg.limit = '25';
+  searchArg.offset = '0';
+  searchArg.orderfield = column_name;
+  searchArg.order = 'ASC';
+  searchArg.descendants = [];
+  console.log(JSON.stringify(searchArg));
+  searchArgField.value = JSON.stringify(searchArg);
+  document.getElementById(searchForm).submit();
+}
+function fullsearch() {
+  const searchArgField = document.getElementById('searchArgFull');
+  let searchArg = JSON.parse(searchArgField.value);
+  searchArgField.value = JSON.stringify(searchArg);
+  document.getElementById('searchFormFull').submit();
+}
+function PlotCells() {
+  const searchArgField = document.getElementById('searchArgPlots');
+  let searchArg = JSON.parse(searchArgField.value);
+  document.getElementById('plotCells').submit();
+}
+  </script>
+  <script 
+  src="http://hyphenator.googlecode.com/svn/tags/Version%204.0.0/Hyphenator.js">
+</script>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Hyphenator.run();
+        });
+    </script>
+</head>
+<body lang=en class=hyphenate>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">L1000</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <div class="menu-toggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </div>
+  </nav>
+  <body>
+  <div class="container">
+    <button type="button" onclick="fullsearch()">Show full Table</button>
+    <button type="button" onclick="PlotCells()">Show Plots</button>
+  </div>
+ <main>
+  <% if (data && data.length > 0) { %>
+    <table>
+      <thead>
+        <tr class="header-row">
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Signature Name</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'sig_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'sig_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Compound</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'at.pert_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'at.pert_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Gene Target</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'gene_target')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'gene_target')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Cells</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'cell_name')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'cell_name')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Pertubation Dose</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'pert_dose')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'pert_dose')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Pertubation Time</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'pert_time')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'pert_time')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Modulated Genes</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'ss_ngene')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'ss_ngene')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Transcriptional Activity Score</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'tas')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'tas')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">High Quality Data</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'is_hiq')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'is_hiq')">➧</button>
+                </div>
+            </div>
+          </th>
+          <th>
+            <div class="th-container">
+              <span class="th-text hyphenate">Quality Control passed</span>
+                <div class="button-container">
+                  <button class="btn-top" type="button" onclick="changeOrder('ASC', 'qc_pass')">➧</button>
+                  <button class="btn-bottom" type="button" onclick="changeOrder('DESC', 'qc_pass')">➧</button>
+                </div>
+            </div>
+          </th>
+        </tr>
+        <tr class="tooltip-row">
+          <th>
+              <span class="tooltip">ⓘ
+                <span class="tooltiptext hyphenate">This is the name of the signature.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">This is the name of the compound used to perturbate.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">The gene that the compound targets.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">The cell type used in the experiment.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">The dose of the compound applied.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">The duration for which the cells were exposed to the compound.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate"> Number of Genes that were differentially expressed in response to the compound.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">Score representing the transcriptional activity.</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">Binary indicating whether the given signature was of high techincal and functional quality. Specific requirements are qc pass = 1 AND (median_recall_rank_spearman <= 5 OR median_recall_rank_wtcs_50 <= 5)</span></span>
+          </th>
+          <th>
+            <span class="tooltip">ⓘ<span class="tooltiptext hyphenate">Binary indicating whether the given signature had at least 50% of its replicates flagged as qc_pass.</span></span>
+          </th>
+        </tr>
+        <tr class="searches">
+          <th>
+            <input type="text" id="SigNameDesc" name="SigNameDesc" value="">
+            <button type="button" onclick="addDescendant('contains', 'SigNameDesc', 'sig_name', 'descendants')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="compoundDesc" name="compoundDesc" value="">
+            <button type="button" onclick="addDescendant('contains', 'compoundDesc', 'at.pert_name', 'descendants')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="geneTargetDesc" name="geneTargetDesc" value="">
+            <button type="button" onclick="addDescendant('contains', 'geneTargetDesc', 'gene_target', 'descendants')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="cellNameDesc" name="cellNameDesc" value="">
+            <button type="button" onclick="addDescendant('contains', 'cellNameDesc', 'cell_name', 'descendants')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="pertDoseDesc" name="pertDoseDesc" value="">
+            <button type="button" onclick="addDescendant('contains', 'pertDoseDesc', 'pert_dose', 'descendants')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="pertTimeDesc" name="pertTimeDesc" value="">
+            <button type="button" onclick="addDescendant('contains', 'pertTimeDesc', 'pert_time', 'descendants')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="SsNgeneDesc" name="SsNgeneDesc" value="">
+            <button type="button" onclick="addNumberDescendant('SsNgeneDesc','ss_ngene', 'searchForm')">Search</button>
+          </th>
+          <th>
+            <input type="text" id="tasDesc" name="tasDesc" value="">
+            <button type="button" onclick="addNumberDescendant('tasDesc','tas', 'searchForm')">Search</button>
+          </th>
+          <th>
+            <select id="highQCDesc" name="highQCDesc">
+              <option value="">All</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+            <button type="button" onclick="addDescendant('=', 'highQCDesc', 'is_hiq', 'descendants')">Search</button>
+          </th>
+          <th>
+            <select id="QcPassDesc" name="QcPassDesc">
+              <option value="">All</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+            <button type="button" onclick="addDescendant('=', 'QcPassDesc', 'qc_pass', 'descendants')">Search</button>
+          </th>
+        </tr>
+      </thead>
+  <tbody>
+    <% for (const row of data) { %>
+      <tr>
+        <% for (const [key, value] of Object.entries(row)) { %>
+          <td>
+            <% if (key === 'cell_name') { %>
+              <a href="#" onclick="forwardLink('<%= value %>', 'cell_name', 'searchFormCells', 'searchArgCells')"><%= value %></a>
+            <% } else if (key === 'pert_name') { %>
+              <a href="#" onclick="forwardLink('<%= value %>', 'pert_name', 'searchFormPerts', 'searchArgPerts')"><%= value %></a>
+            <% } else if (key === 'gene_target') { %>
+              <a href="#" onclick="forwardLink('<%= value %>', 'gene_symbol', 'searchFormGenes', 'searchArgGenes')"><%= value %></a>
+            <% } else { %>
+              <%= value %>
+            <% } %>
+          </td>
+        <% } %>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+<% } else { %>
+  <p>No data available</p>
+<% } %>
+  <div class="Pagination">
+    <button type="button" onclick="adjustOffset(-1, event)">Prev.</button>
+    <button type="button" onclick="adjustOffset(1, event)">Next.</button>
+    <button type="button" onclick="changeLimit(25)">25</button>
+    <button type="button" onclick="changeLimit(50)">50</button>
+    <button type="button" onclick="changeLimit(100)">100</button>
+    <form
+      id="searchForm"
+      action="/siginfo/searchUI"
+      method="post"
+    >
+      <input type="hidden" id="searchArg" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form
+      id="searchFormFull"
+      action="/genetargets"
+      method="post"
+    >
+      <input type="hidden" id="searchArgFull" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form id="searchFormCells" action="/cells/searchUI" method="post">
+      <input type="hidden" id="searchArgCells" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form id="searchFormPerts" action="/perturbations/searchUI" method="post">
+      <input type="hidden" id="searchArgPerts" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+    <form id="searchFormGenes" action="/genes/searchUI" method="post">
+      <input type="hidden" id="searchArgGenes" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+    </form>
+  </div>
+  </main>
+</body>
+<!-- Button for Cells plotting-->
+<form id="plotCells" action="/plots" method="post">
+  <input type="hidden" id="searchArgPlots" name="searchArg" value="<%= JSON.stringify(siteSearchArg) %>">
+</form>
+    <script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+</html>
