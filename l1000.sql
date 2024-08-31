@@ -145,10 +145,10 @@ CREATE TABLE IF NOT EXISTS tempperturbagens (
 );
  
 .mode csv
-.import /Users/daron/Desktop/Studium/siginfo.csv tempsignature_infos
-.import /Users/daron/Documents/GitHub/SDAM-L1000/cellinfo.csv tempcells
-.import /Users/daron/Documents/GitHub/SDAM-L1000/genes.csv tempgenes
-.import /Users/daron/Documents/GitHub/SDAM-L1000/compounds.csv tempperturbagens;
+.import Path/to/local/siginfo.csv tempsignature_infos
+.import Path/to/local/cellinfo.csv tempcells
+.import Path/to/local/genes.csv tempgenes
+.import Path/to/local/compounds.csv tempperturbagens;
  
 INSERT INTO signature_infos ('sig_name', 'pert_name', 'cmap_name', 'pert_type', 'cell_name', 'bead_batch', 'pert_dose', 'pert_time', 'nsamples', 'cc_q75', 'ss_ngene', 'tas', 'pct_self_rank_q25', 'wt', 'median_recall_rank_spearman', 'median_recall_rank_wtcs_50', 'median_recall_score_spearman', 'median_recall_score_wtcs_50', 'batch_effect_tstat', 'batch_effect_tstat_pct', 'is_hiq', 'qc_pass', 'det_wells', 'det_plates', 'distil_ids','project_code') SELECT * FROM tempsignature_infos;
  
