@@ -252,7 +252,36 @@ function translateToSQL(searchArg, table) {
   }
 
   if (table === 'signature_infos') {
-    header = `SELECT * FROM ${table} WHERE `;
+    header = `SELECT si.sig_name AS 'Signature Name',
+                     at.gene_target AS 'Targeted Gene',
+                     at.pert_name AS 'Compound',
+                     si.cmap_name AS 'Connectivity Map',
+                     si.cell_name AS 'Cells',
+                     si.bead_batch AS 'Batch Nr.',
+                     si.pert_dose AS 'Dosage',
+                     si.pert_time AS 'Perturbation Period',
+                     si.nsamples AS 'Number of Samples',
+                     si.cc_q75 AS 'Landmark Space',
+                     si.ss_ngene AS 'Number of Genes',
+                     si.tas AS 'Transcriptional Activity Score',
+                     si.pct_self_rank_q25 AS 'Self Connectivity',
+                     si.wt AS 'Weight List',
+                     si.median_recall_rank_spearman AS 'MRR1',
+                     si.median_recall_rank_wtcs_50 AS 'MRR50',
+                     si.median_recall_score_spearman AS 'MRS1',
+                     si.median_recall_score_wtcs_50 AS 'MRS50',
+                     si.batch_effect_tstat AS 'Batch Effect',
+                     si.batch_effect_tstat_pct AS 'Batch Effect %',
+                     si.is_hiq AS 'High Quality',
+                     si.qc_pass AS 'Quality Control Pass',
+                     si.det_wells AS 'Detection Wells',
+                     si.det_plates AS 'Detected Plates',
+                     si.distil_ids AS 'Replicate IDs',
+                     si.project_code AS 'Project Code'
+              FROM signature_infos si
+              LEFT JOIN perturbagens at
+              ON si.pert_name = at.pert_name
+              WHERE`;
     typemapper = siginfotypes;
   }
   if (table === 'signature_infosUI') {
