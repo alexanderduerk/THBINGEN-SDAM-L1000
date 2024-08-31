@@ -113,7 +113,7 @@ class Genes {
         : 'SELECT * FROM genes';
     console.log(`SQL generated to search Genes:\n${JSON.stringify(searchSql)}`);
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
@@ -135,7 +135,7 @@ class Genes {
         : 'SELECT * FROM genes';
     console.log(`SQL generated to search Genes:\n${JSON.stringify(searchSql)}`);
     // Query the database
-    const dbResult = await dbconnection.all(searchSql);
+    const dbResult = await dbconnection.get(searchSql);
     // Done
     console.log(dbResult);
     return dbResult;
