@@ -1,0 +1,27 @@
+.chart-container {
+  width: 50%;
+  height: 50%; /* Adjust height as needed */
+  display: flex; /* Allow elements to sit side-by-side */
+  align-items: center; /* Center buttons vertically */
+}
+
+.chart-button {
+  margin-left: 10px; /* Add spacing between chart and button */
+  padding: 5px 10px; /* Add padding to button */
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 5px; /* Add rounded corners */
+  cursor: pointer; /* Change cursor to indicate clickability */
+}
+
+.chart-container {
+  width: 50%;
+  height: 50%; /* Adjust height as needed */
+}
+
+.chart-container:hover {
+  width: 75%;
+  height: 400px; /* Adjust height as needed */
+  transition:
+    width 0.3s ease-in-out,
+    height 0.3s ease-in-out;
+}
