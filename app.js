@@ -961,7 +961,7 @@ app.post('/genetargets', async (req, res) => {
     // Return the result:
     if (req.accepts('html')) {
       ejs.renderFile(
-        './views/siginfo.ejs',
+        './views/siginfofull.ejs',
         { data: signatures, siteSearchArg: searchArgObject },
         (err, str) => {
           if (err) {
