@@ -1,0 +1,39 @@
+{
+  "name": "sdam",
+  "version": "1.0.0",
+  "description": "A RESTFULL Api for Sql",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "test.js"
+  },
+  "keywords": [
+    "SQL",
+    "Database"
+  ],
+  "author": "Alexander Duerk",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.8.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "markmap": "^0.6.1",
+    "path": "^0.12.7",
+    "shelljs": "^0.8.5",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  }
+}

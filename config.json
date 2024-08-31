@@ -1,0 +1,8 @@
+{
+  "database": {
+    "path": "./l1000.db"
+  },
+  "server": {
+    "port": 3000
+  }
+}
